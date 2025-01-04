@@ -17,16 +17,25 @@ export default function LoginPage() {
   useEffect(() => {
     // If user is already authenticated, redirect to dashboard
     if (user) {
+      console.log('User already authenticated, redirecting:', user.email);
       router.push('/');
     }
   }, [user, router]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session?.user?.email);
+      
       if (event === 'SIGNED_IN') {
         toast.success('Successfully signed in!');
         router.push('/');
         router.refresh();
+      }
+      if (event === 'USER_UPDATED') {
+        console.log('User updated:', session?.user);
+      }
+      if (event === 'SIGNED_OUT') {
+        console.log('User signed out');
       }
     });
 
@@ -60,6 +69,10 @@ export default function LoginPage() {
           }}
           providers={[]}
           redirectTo={`${typeof window !== 'undefined' ? window.location.origin : ''}/`}
+          onError={(error) => {
+            console.error('Auth error:', error);
+            toast.error(error.message);
+          }}
         />
       </Card>
     </div>
