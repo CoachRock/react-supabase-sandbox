@@ -4,18 +4,25 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const mockUser = {
-  name: "UsersFN UsersLN",
-  role: "Hiring Manager Admin",
-  avatar_url: "https://github.com/shadcn.png",
-};
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface UserProfileProps {
   onNavigate?: () => void;
 }
 
 export function UserProfile({ onNavigate }: UserProfileProps) {
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      toast.success("Successfully logged out");
+    } catch (error) {
+      console.error("Error logging out:", error);
+      toast.error("Error logging out");
+    }
+  };
+
   return (
     <div className="border-t p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <Link 
@@ -43,7 +50,12 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className="h-8 w-8 hover:bg-destructive hover:text-destructive-foreground"
+          onClick={(e) => {
+            e.preventDefault();
+            handleLogout();
+          }}
+          title="Logout"
         >
           <LogOut className="h-4 w-4" />
         </Button>
