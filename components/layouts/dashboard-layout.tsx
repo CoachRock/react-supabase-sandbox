@@ -11,12 +11,17 @@ import { LoadingIndicator } from "@/components/loading-indicator";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { useAuth } from "@/components/auth-provider";
+import { usePathname } from "next/navigation";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { loading } = useAuth();
+  const pathname = usePathname();
+  const isAuthPage = ['/login', '/reset-password', '/update-password'].includes(pathname);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -32,6 +37,20 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   if (!mounted) {
     return null;
+  }
+
+  // Show loading state
+  if (loading && !isAuthPage) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // Don't show navigation for auth pages
+  if (isAuthPage) {
+    return <main className="min-h-screen bg-background">{children}</main>;
   }
 
   const logoSrc = theme === 'dark'
