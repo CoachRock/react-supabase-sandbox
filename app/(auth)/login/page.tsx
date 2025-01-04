@@ -1,3 +1,3 @@
 export default function LoginPage() {
-  return null;
+  return null; // The auth UI is handled by AuthProvider
 }
