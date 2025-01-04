@@ -1,5 +1,3 @@
-"use client";
-
 import { MainNav } from "./main-nav";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
@@ -8,14 +6,10 @@ import { useState, useEffect } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { LoadingIndicator } from "./loading-indicator";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useTheme } from '@/hooks/use-theme';
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
-
-export function DashboardLayout({ children }: DashboardLayoutProps) {
+export function DashboardLayout() {
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { theme } = useTheme();
@@ -66,8 +60,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     <img
                       src={logoSrc}
                       alt="Alpha Logo"
-                      width={320}
-                      height={73}
                       className="w-full h-auto"
                     />
                   </Link>
@@ -82,8 +74,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <img
               src={logoSrc}
               alt="Alpha Logo"
-              width={320}
-              height={73}
               className="h-8 w-auto"
             />
           </Link>
@@ -93,7 +83,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main Content */}
       <main className="lg:pl-64">
         <div className="container mx-auto px-4 pt-20 pb-6 lg:py-8 lg:px-8">
-          {children}
+          <Outlet />
         </div>
       </main>
     </div>
