@@ -20,6 +20,8 @@ const AuthContext = createContext<AuthContextType>({
   signOut: async () => {},
 });
 
+const publicRoutes = ['/login', '/reset-password', '/update-password'];
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,18 +29,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Check current session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    const initializeAuth = async () => {
+      try {
+        // Check active session
+        const { data: { session } } = await supabase.auth.getSession();
+        setUser(session?.user ?? null);
+        console.log('Initial session check:', session?.user?.email);
+      } catch (error) {
+        console.error('Error checking session:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.email);
       setUser(session?.user ?? null);
-      setLoading(false);
-
+      
       if (event === 'SIGNED_IN') {
         toast.success('Successfully signed in!');
         router.refresh();
@@ -56,23 +66,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [router]);
 
-  // Protect routes
+  // Route protection
   useEffect(() => {
     if (!loading) {
-      if (!user && 
-          !pathname.startsWith('/login') && 
-          !pathname.startsWith('/reset-password') && 
-          !pathname.startsWith('/update-password')) {
+      const isPublicRoute = publicRoutes.includes(pathname);
+      
+      if (!user && !isPublicRoute) {
         console.log('Redirecting to login from:', pathname);
         router.push('/login');
       }
       
-      // Redirect authenticated users away from auth pages
-      if (user && (
-        pathname.startsWith('/login') || 
-        pathname.startsWith('/reset-password') || 
-        pathname.startsWith('/update-password')
-      )) {
+      if (user && isPublicRoute) {
         console.log('Redirecting to home from:', pathname);
         router.push('/');
       }
@@ -89,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Show auth UI if not authenticated and on login page
+  // Show auth UI for login route
   if (!user && pathname === '/login') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
