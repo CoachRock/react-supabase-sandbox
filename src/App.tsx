@@ -12,6 +12,7 @@ import ManageJobs from './routes/manage-jobs';
 import Support from './routes/support';
 import UserProfile from './routes/user-profile';
 import CreateInterview from './routes/create-interview';
+import CreateJob from './routes/create-job';
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -75,6 +76,7 @@ function App() {
             </ProtectedRoute>
           }>
             <Route path="/" element={<Home />} />
+            <Route path="/create-job" element={<CreateJob />} />
             <Route path="/active-jobs" element={<ActiveJobs />} />
             <Route path="/archived-jobs" element={<ArchivedJobs />} />
             <Route path="/individual-evaluation" element={<IndividualEvaluation />} />
