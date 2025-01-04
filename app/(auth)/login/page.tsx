@@ -21,7 +21,8 @@ export default function LoginPage() {
         console.log('Current session check:', {
           session: session,
           user: session?.user,
-          error: error
+          error: error,
+          timestamp: new Date().toISOString()
         });
         
         if (session?.user) {
@@ -29,7 +30,11 @@ export default function LoginPage() {
           router.push('/');
         }
       } catch (error) {
-        console.error('Session check error:', error);
+        console.error('Session check error:', {
+          error: error,
+          stack: error instanceof Error ? error.stack : undefined,
+          timestamp: new Date().toISOString()
+        });
       }
     };
 
@@ -41,7 +46,12 @@ export default function LoginPage() {
       console.log('Auth state changed:', {
         event: event,
         user: session?.user,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        sessionDetails: session ? {
+          accessToken: !!session.access_token,
+          refreshToken: !!session.refresh_token,
+          expiresAt: session.expires_at,
+        } : null
       });
       
       if (event === 'SIGNED_IN') {
@@ -103,7 +113,11 @@ export default function LoginPage() {
               status: error.status,
               name: error.name,
               stack: error.stack,
-              timestamp: new Date().toISOString()
+              timestamp: new Date().toISOString(),
+              requestDetails: {
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+              }
             });
             toast.error(error.message || 'An error occurred during authentication');
           }}
@@ -114,6 +128,8 @@ export default function LoginPage() {
                 password_label: 'Password',
                 button_label: 'Sign in',
                 loading_button_label: 'Signing in...',
+                email_input_placeholder: 'Enter your email',
+                password_input_placeholder: 'Enter your password'
               }
             }
           }}
