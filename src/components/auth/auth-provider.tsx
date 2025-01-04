@@ -27,9 +27,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   useEffect(() => {
+    // Initialize auth state
     const initializeAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Error checking session:', error);
+          return;
+        }
+        
         setUser(session?.user ?? null);
         console.log('Initial session check:', session?.user?.email);
       } catch (error) {
@@ -41,17 +47,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     initializeAuth();
 
+    // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.email);
       setUser(session?.user ?? null);
       
       if (event === 'SIGNED_IN') {
         toast.success('Successfully signed in!');
-        navigate('/');
+        navigate('/', { replace: true });
       }
       if (event === 'SIGNED_OUT') {
         toast.success('Successfully signed out!');
-        navigate('/login');
+        navigate('/login', { replace: true });
+      }
+      if (event === 'TOKEN_REFRESHED') {
+        console.log('Token refreshed successfully');
       }
     });
 
@@ -66,20 +76,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (!user && !isPublicRoute) {
         console.log('Redirecting to login from:', location.pathname);
-        navigate('/login');
+        navigate('/login', { replace: true });
       }
       
       if (user && isPublicRoute) {
         console.log('Redirecting to home from:', location.pathname);
-        navigate('/');
+        navigate('/', { replace: true });
       }
     }
   }, [user, loading, location.pathname, navigate]);
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
-      navigate('/login');
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      navigate('/login', { replace: true });
     } catch (error) {
       console.error('Error signing out:', error);
       toast.error('Error signing out. Please try again.');

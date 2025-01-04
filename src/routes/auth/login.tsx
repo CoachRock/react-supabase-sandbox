@@ -15,20 +15,9 @@ export default function LoginPage() {
   useEffect(() => {
     // If user is already authenticated, redirect to dashboard
     if (user) {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   }, [user, navigate]);
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
-        toast.success('Successfully signed in!');
-        navigate('/');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
 
   // Don't render login form if user is authenticated
   if (user) {
@@ -56,7 +45,7 @@ export default function LoginPage() {
             },
           }}
           providers={[]}
-          redirectTo={`${window.location.origin}/`}
+          redirectTo={window.location.origin}
         />
       </Card>
     </div>
