@@ -29,7 +29,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Check active session
         const { data: { session } } = await supabase.auth.getSession();
         setUser(session?.user ?? null);
         console.log('Initial session check:', session?.user?.email);
@@ -42,7 +41,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     initializeAuth();
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.email);
       setUser(session?.user ?? null);
@@ -64,7 +62,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [router]);
 
-  // Route protection
   useEffect(() => {
     if (!loading) {
       const isPublicRoute = publicRoutes.includes(pathname);
@@ -83,13 +80,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
+      await supabase.signOut();
       router.push('/login');
     } catch (error) {
       console.error('Error signing out:', error);
       toast.error('Error signing out. Please try again.');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={{ user, loading, signOut }}>
