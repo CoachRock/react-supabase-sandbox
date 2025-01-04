@@ -26,70 +26,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
-        if (event === "SIGNED_IN") {
-          router.refresh();
-          router.push("/");
-        }
-        if (event === "SIGNED_OUT") {
-          router.refresh();
-          router.push("/login");
-        }
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+
+      if (event === 'SIGNED_IN') {
+        router.refresh();
+        router.push('/');
       }
-    );
+      if (event === 'SIGNED_OUT') {
+        router.refresh();
+        router.push('/login');
+      }
+    });
 
     return () => {
       subscription.unsubscribe();
     };
   }, [router]);
 
+  // Protect routes
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        // If no session and not on an auth page, redirect to login
-        if (!session && 
-            !pathname.startsWith("/login") && 
-            !pathname.startsWith("/reset-password") && 
-            !pathname.startsWith("/update-password")) {
-          router.push("/login");
-        }
-      } catch (error) {
-        console.error('Error checking auth status:', error);
-        router.push("/login");
+    if (!loading) {
+      if (!user && 
+          !pathname.startsWith('/login') && 
+          !pathname.startsWith('/reset-password') && 
+          !pathname.startsWith('/update-password')) {
+        router.push('/login');
       }
-    };
-
-    checkAuth();
-  }, [pathname, router]);
+      
+      // Redirect authenticated users away from auth pages
+      if (user && (
+        pathname.startsWith('/login') || 
+        pathname.startsWith('/reset-password') || 
+        pathname.startsWith('/update-password')
+      )) {
+        router.push('/');
+      }
+    }
+  }, [user, loading, pathname, router]);
 
   const signOut = async () => {
-    try {
-      await supabase.auth.signOut();
-      router.push("/login");
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
+    await supabase.auth.signOut();
+    router.push('/login');
   };
 
-  // If on auth page and authenticated, redirect to home
-  useEffect(() => {
-    if (user && (
-      pathname.startsWith("/login") || 
-      pathname.startsWith("/reset-password") || 
-      pathname.startsWith("/update-password")
-    )) {
-      router.push("/");
-    }
-  }, [user, pathname, router]);
-
   // Show auth UI if not authenticated and on login page
-  if (!user && pathname.startsWith("/login")) {
+  if (!user && pathname === '/login') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
         <div className="max-w-md w-full space-y-8">
@@ -124,7 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Show loading state while checking auth
+  // Show loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
