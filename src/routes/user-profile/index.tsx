@@ -1,2 +1,1 @@
-import { UserProfile } from './page';
-export default UserProfile;
+export { UserProfile as default } from './page';

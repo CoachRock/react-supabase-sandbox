@@ -10,7 +10,7 @@ import ArchivedJobs from './routes/archived-jobs';
 import IndividualEvaluation from './routes/individual-evaluation';
 import ManageJobs from './routes/manage-jobs';
 import Support from './routes/support';
-import { UserProfile } from './routes/user-profile';
+import UserProfile from './routes/user-profile';
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
