@@ -1,52 +1,25 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from './hooks/use-auth';
 import { DashboardLayout } from './components/layouts/dashboard-layout';
-import { AuthProvider, useAuth } from './components/auth/auth-provider';
-import { ThemeProvider } from './components/theme-provider';
-import { Toaster } from './components/ui/sonner';
-import Login from './routes/auth/login';
 import Home from './routes/home';
 import ActiveJobs from './routes/active-jobs';
 import ArchivedJobs from './routes/archived-jobs';
 import IndividualEvaluation from './routes/individual-evaluation';
+import FinalReport from './routes/final-report';
 import ManageJobs from './routes/manage-jobs';
 import Support from './routes/support';
 import UserProfile from './routes/user-profile';
 import CreateInterview from './routes/create-interview';
 import CreateJob from './routes/create-job';
+import { Applicants } from './routes/applicants';
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
-  
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  const { session } = useAuth();
+  const location = useLocation();
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <>{children}</>;
-};
-
-// Auth Route wrapper component (redirects to home if already authenticated)
-const AuthRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
-  
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  if (user) {
-    return <Navigate to="/" replace />;
+  if (!session) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;
@@ -54,23 +27,28 @@ const AuthRoute = ({ children }: { children: React.ReactNode }) => {
 
 function App() {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <AuthProvider>
-        <Routes>
-          {/* Auth Routes */}
-          <Route path="/login" element={
-            <AuthRoute>
-              <Login />
-            </AuthRoute>
-          } />
-
-          {/* Protected Routes */}
-          <Route element={
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <div>Login Page</div>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <div>Reset Password Page</div>
+          }
+        />
+        <Route
+          path="/update-password"
+          element={
+            <div>Update Password Page</div>
+          }
+        />
+        <Route
+          element={
             <ProtectedRoute>
               <DashboardLayout />
             </ProtectedRoute>
@@ -80,15 +58,15 @@ function App() {
             <Route path="/active-jobs" element={<ActiveJobs />} />
             <Route path="/archived-jobs" element={<ArchivedJobs />} />
             <Route path="/individual-evaluation" element={<IndividualEvaluation />} />
+            <Route path="/final-report" element={<FinalReport />} />
             <Route path="/manage-jobs" element={<ManageJobs />} />
-            <Route path="/create-interview" element={<CreateInterview />} />
             <Route path="/support" element={<Support />} />
             <Route path="/user-profile" element={<UserProfile />} />
-          </Route>
-        </Routes>
-        <Toaster />
-      </AuthProvider>
-    </ThemeProvider>
+            <Route path="/create-interview" element={<CreateInterview />} />
+            <Route path="/applicants" element={<Applicants />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
