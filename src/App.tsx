@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from './hooks/use-auth';
+import { useAuth } from './components/auth/auth-provider';
 import { DashboardLayout } from './components/layouts/dashboard-layout';
 import Home from './routes/home';
 import ActiveJobs from './routes/active-jobs';
@@ -15,10 +15,10 @@ import { Applicants } from './routes/applicants';
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { session } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
 
-  if (!session) {
+  if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
