@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/components/auth/auth-provider";
@@ -14,12 +14,14 @@ interface UserProfileProps {
 
 export function UserProfile({ onNavigate }: UserProfileProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       toast.success("Successfully logged out");
+      navigate('/login');
     } catch (error) {
       console.error("Error logging out:", error);
       toast.error("Error logging out");
