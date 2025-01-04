@@ -42,11 +42,12 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className="h-8 w-8 hover:bg-destructive hover:text-destructive-foreground"
           onClick={(e) => {
             e.preventDefault();
             signOut();
           }}
+          title="Logout"
         >
           <LogOut className="h-4 w-4" />
         </Button>
