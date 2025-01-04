@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@/components/theme-provider'
+import { AuthProvider } from '@/components/auth-provider'
 import { DashboardLayout } from '@/components/layouts/dashboard-layout'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
@@ -29,8 +30,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <DashboardLayout>{children}</DashboardLayout>
-          <Toaster />
+          <AuthProvider>
+            <DashboardLayout>{children}</DashboardLayout>
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
