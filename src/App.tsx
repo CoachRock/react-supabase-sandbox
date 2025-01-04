@@ -5,6 +5,12 @@ import { ThemeProvider } from './components/theme-provider';
 import { Toaster } from './components/ui/sonner';
 import Login from './routes/auth/login';
 import Home from './routes/home';
+import ActiveJobs from './routes/active-jobs';
+import ArchivedJobs from './routes/archived-jobs';
+import IndividualEvaluation from './routes/individual-evaluation';
+import ManageJobs from './routes/manage-jobs';
+import Support from './routes/support';
+import { UserProfile } from './routes/user-profile';
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -68,6 +74,12 @@ function App() {
             </ProtectedRoute>
           }>
             <Route path="/" element={<Home />} />
+            <Route path="/active-jobs" element={<ActiveJobs />} />
+            <Route path="/archived-jobs" element={<ArchivedJobs />} />
+            <Route path="/individual-evaluation" element={<IndividualEvaluation />} />
+            <Route path="/manage-jobs" element={<ManageJobs />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/user-profile" element={<UserProfile />} />
           </Route>
         </Routes>
         <Toaster />
