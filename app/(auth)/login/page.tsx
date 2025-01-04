@@ -8,9 +8,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useAuth } from '@/components/auth-provider';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    // If user is already authenticated, redirect to dashboard
+    if (user) {
+      router.push('/');
+    }
+  }, [user, router]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -23,6 +32,11 @@ export default function LoginPage() {
 
     return () => subscription.unsubscribe();
   }, [router]);
+
+  // Don't render login form if user is authenticated
+  if (user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
