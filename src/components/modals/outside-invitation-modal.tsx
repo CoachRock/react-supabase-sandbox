@@ -28,6 +28,7 @@ export function OutsideInvitationModal({ children }: OutsideInvitationModalProps
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [expiration, setExpiration] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = () => {
     console.log("Sending invitation to:", {
@@ -36,11 +37,16 @@ export function OutsideInvitationModal({ children }: OutsideInvitationModalProps
       email,
       expiration
     });
-    // Add invitation sending logic here
+    setIsOpen(false);
+    // Reset form
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setExpiration("");
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
@@ -99,6 +105,7 @@ export function OutsideInvitationModal({ children }: OutsideInvitationModalProps
           <Button
             className="w-full bg-blue-500 hover:bg-blue-600 text-white"
             onClick={handleSubmit}
+            disabled={!firstName || !lastName || !email || !expiration}
           >
             Send Invitation
           </Button>

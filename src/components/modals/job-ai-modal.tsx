@@ -21,6 +21,7 @@ interface JobAIModalProps {
 
 export function JobAIModal({ title, description }: JobAIModalProps) {
   const [prompt, setPrompt] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleGenerate = () => {
     // AI generation logic will be implemented here
@@ -30,10 +31,11 @@ export function JobAIModal({ title, description }: JobAIModalProps) {
   const handleApply = () => {
     // Apply generated content logic will be implemented here
     console.log("Applying generated content");
+    setIsOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="h-5 w-5 ml-3 text-blue-500 hover:text-blue-600">
           <Sparkles className="h-4 w-4" />
@@ -42,9 +44,7 @@ export function JobAIModal({ title, description }: JobAIModalProps) {
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>
-            {description}
-          </DialogDescription>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <Textarea

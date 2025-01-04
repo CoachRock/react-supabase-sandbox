@@ -33,6 +33,7 @@ export function VideoQuestionModal({ children }: VideoQuestionModalProps) {
   const [answerTime, setAnswerTime] = useState("");
   const [allowAiFollowUp, setAllowAiFollowUp] = useState(false);
   const [followUpQuestions, setFollowUpQuestions] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = () => {
     console.log({
@@ -44,10 +45,19 @@ export function VideoQuestionModal({ children }: VideoQuestionModalProps) {
       allowAiFollowUp,
       followUpQuestions
     });
+    setIsOpen(false);
+    // Reset form
+    setQuestion("");
+    setIdealAnswer("");
+    setPrepTime("");
+    setAttempts("");
+    setAnswerTime("");
+    setAllowAiFollowUp(false);
+    setFollowUpQuestions("");
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
@@ -131,14 +141,14 @@ export function VideoQuestionModal({ children }: VideoQuestionModalProps) {
                 onCheckedChange={(checked) => setAllowAiFollowUp(checked as boolean)}
               />
               <Label htmlFor="aiFollowUp" className="text-sm font-medium text-blue-500">
-                Allow Ai Follow-Up Questions
+                Allow AI Follow-Up Questions
               </Label>
             </div>
 
             {allowAiFollowUp && (
               <div className="flex items-center gap-4">
                 <Label className="text-sm font-medium text-blue-500 whitespace-nowrap">
-                  How many follow-up questions should the Ai ask?
+                  How many follow-up questions should the AI ask?
                 </Label>
                 <Select value={followUpQuestions} onValueChange={setFollowUpQuestions}>
                   <SelectTrigger className="w-24">
@@ -157,6 +167,7 @@ export function VideoQuestionModal({ children }: VideoQuestionModalProps) {
             <Button
               className="bg-blue-600 hover:bg-blue-700 text-white"
               onClick={handleSubmit}
+              disabled={!question || !prepTime || !attempts || !answerTime}
             >
               Submit
             </Button>

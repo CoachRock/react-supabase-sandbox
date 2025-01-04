@@ -5,11 +5,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const evaluatorAvatar = {
-  image: "https://github.com/shadcn.png",
-  name: "UsersFN UsersLN"
-};
-
 interface EvaluationSummaryProps {
   scores: {
     question1: string;
@@ -43,10 +38,8 @@ export function EvaluationSummary({
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Avatar className="h-10 w-10">
-          <AvatarImage src={evaluatorAvatar.image} alt={evaluatorAvatar.name} />
-          <AvatarFallback>
-            {evaluatorAvatar.name.split(' ').map(n => n[0]).join('')}
-          </AvatarFallback>
+          <AvatarImage src="https://github.com/shadcn.png" alt="Evaluator" />
+          <AvatarFallback>EV</AvatarFallback>
         </Avatar>
         <h3 className="text-xl font-bold">Evaluation Summary for {candidateName}</h3>
       </div>

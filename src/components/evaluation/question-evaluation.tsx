@@ -8,11 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState } from 'react';
 import { VideoPlayerModal } from '@/components/modals/video-player-modal';
 
-const evaluatorAvatar = {
-  image: "https://github.com/shadcn.png",
-  name: "UsersFN UsersLN"
-};
-
 interface QuestionEvaluationProps {
   scores: {
     question1: string;
@@ -48,10 +43,8 @@ export function QuestionEvaluation({
   const EvaluatorLabel = () => (
     <div className="flex items-center gap-2">
       <Avatar className="h-8 w-8">
-        <AvatarImage src={evaluatorAvatar.image} alt={evaluatorAvatar.name} />
-        <AvatarFallback>
-          {evaluatorAvatar.name.split(' ').map(n => n[0]).join('')}
-        </AvatarFallback>
+        <AvatarImage src="https://github.com/shadcn.png" alt="Evaluator" />
+        <AvatarFallback>EV</AvatarFallback>
       </Avatar>
       <span className="font-medium">Feedback</span>
     </div>
@@ -60,10 +53,8 @@ export function QuestionEvaluation({
   const EvaluatorScore = () => (
     <div className="flex items-center gap-2">
       <Avatar className="h-8 w-8">
-        <AvatarImage src={evaluatorAvatar.image} alt={evaluatorAvatar.name} />
-        <AvatarFallback>
-          {evaluatorAvatar.name.split(' ').map(n => n[0]).join('')}
-        </AvatarFallback>
+        <AvatarImage src="https://github.com/shadcn.png" alt="Evaluator" />
+        <AvatarFallback>EV</AvatarFallback>
       </Avatar>
       <div className="font-medium flex items-center gap-1">
         Score
@@ -117,7 +108,6 @@ export function QuestionEvaluation({
           <Select 
             value={scores.question1}
             onValueChange={(value) => setScores(prev => ({ ...prev, question1: value }))}
-            required
           >
             <SelectTrigger className="w-[100px]">
               <SelectValue placeholder="Score" />
@@ -179,7 +169,6 @@ export function QuestionEvaluation({
           <Select 
             value={scores.question2}
             onValueChange={(value) => setScores(prev => ({ ...prev, question2: value }))}
-            required
           >
             <SelectTrigger className="w-[100px]">
               <SelectValue placeholder="Score" />
@@ -290,7 +279,6 @@ export function QuestionEvaluation({
           <Select 
             value={scores.question5}
             onValueChange={(value) => setScores(prev => ({ ...prev, question5: value }))}
-            required
           >
             <SelectTrigger className="w-[100px]">
               <SelectValue placeholder="Score" />
