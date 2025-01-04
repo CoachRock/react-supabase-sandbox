@@ -15,18 +15,25 @@ export default function LoginPage() {
   const { user } = useAuth();
 
   useEffect(() => {
-    // If user is already authenticated, redirect to dashboard
-    if (user) {
-      console.log('User already authenticated, redirecting:', user.email);
-      router.push('/');
-    }
-  }, [user, router]);
+    const checkSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      console.log('Current session:', session, 'Error:', error);
+      
+      if (session?.user) {
+        console.log('User already authenticated, redirecting:', session.user.email);
+        router.push('/');
+      }
+    };
+
+    checkSession();
+  }, [router]);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.email);
       
       if (event === 'SIGNED_IN') {
+        console.log('Sign in successful:', session?.user);
         toast.success('Successfully signed in!');
         router.push('/');
         router.refresh();
@@ -36,6 +43,9 @@ export default function LoginPage() {
       }
       if (event === 'SIGNED_OUT') {
         console.log('User signed out');
+      }
+      if (event === 'INITIAL_SESSION') {
+        console.log('Initial session:', session);
       }
     });
 
@@ -70,8 +80,23 @@ export default function LoginPage() {
           providers={[]}
           redirectTo={`${typeof window !== 'undefined' ? window.location.origin : ''}/`}
           onError={(error) => {
-            console.error('Auth error:', error);
+            console.error('Auth error details:', {
+              message: error.message,
+              status: error.status,
+              name: error.name,
+              stack: error.stack
+            });
             toast.error(error.message);
+          }}
+          localization={{
+            variables: {
+              sign_in: {
+                email_label: 'Email address',
+                password_label: 'Password',
+                button_label: 'Sign in',
+                loading_button_label: 'Signing in...',
+              }
+            }
           }}
         />
       </Card>
