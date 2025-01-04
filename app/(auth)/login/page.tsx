@@ -22,7 +22,11 @@ export default function LoginPage() {
           session: session,
           user: session?.user,
           error: error,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          authConfig: {
+            endpoint: supabase.auth.api?.url,
+            headers: supabase.auth.api?.headers,
+          }
         });
         
         if (session?.user) {
@@ -33,7 +37,8 @@ export default function LoginPage() {
         console.error('Session check error:', {
           error: error,
           stack: error instanceof Error ? error.stack : undefined,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          context: 'Initial session check'
         });
       }
     };
@@ -51,6 +56,7 @@ export default function LoginPage() {
           accessToken: !!session.access_token,
           refreshToken: !!session.refresh_token,
           expiresAt: session.expires_at,
+          provider: session.user?.app_metadata?.provider,
         } : null
       });
       
@@ -117,6 +123,8 @@ export default function LoginPage() {
               requestDetails: {
                 url: window.location.href,
                 userAgent: navigator.userAgent,
+                authProvider: 'email',
+                supabaseUrl: supabase.auth.api?.url
               }
             });
             toast.error(error.message || 'An error occurred during authentication');
