@@ -10,13 +10,6 @@ import { OutsideInvitationCard } from './components/outside-invitation-card';
 import { mockCandidates } from './data';
 import type { Candidate } from './types';
 
-const tabs = [
-  { name: 'Applicants', count: 72, href: '/applicants' },
-  { name: 'Invitations', count: 24, href: '/invitations' },
-  { name: 'Completed Interviews', count: 14, href: '/completed-interviews' },
-  { name: 'Reviewed', count: 7, href: '/reviewed' }
-];
-
 export function Applicants() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
@@ -72,3 +65,5 @@ export function Applicants() {
     </div>
   );
 }
+
+export default Applicants;

@@ -1,2 +1,1 @@
-import { Applicants } from './page';
-export { Applicants };
+export { default as Applicants } from './page';

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from './components/auth/auth-provider';
+import { useAuth } from '@/components/auth/auth-provider';
 import { DashboardLayout } from './components/layouts/dashboard-layout';
 import Home from './routes/home';
 import ActiveJobs from './routes/active-jobs';
