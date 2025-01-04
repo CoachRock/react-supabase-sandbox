@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { DashboardLayout } from './components/layouts/dashboard-layout';
-import { AuthProvider } from './components/auth/auth-provider';
+import { AuthProvider, useAuth } from './components/auth/auth-provider';
 import { ThemeProvider } from './components/theme-provider';
 import { Toaster } from './components/ui/sonner';
 import Login from './routes/auth/login';
