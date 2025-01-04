@@ -16,12 +16,20 @@ export default function LoginPage() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      console.log('Current session:', session, 'Error:', error);
-      
-      if (session?.user) {
-        console.log('User already authenticated, redirecting:', session.user.email);
-        router.push('/');
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        console.log('Current session check:', {
+          session: session,
+          user: session?.user,
+          error: error
+        });
+        
+        if (session?.user) {
+          console.log('User already authenticated, redirecting:', session.user.email);
+          router.push('/');
+        }
+      } catch (error) {
+        console.error('Session check error:', error);
       }
     };
 
@@ -30,10 +38,17 @@ export default function LoginPage() {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.email);
+      console.log('Auth state changed:', {
+        event: event,
+        user: session?.user,
+        timestamp: new Date().toISOString()
+      });
       
       if (event === 'SIGNED_IN') {
-        console.log('Sign in successful:', session?.user);
+        console.log('Sign in successful:', {
+          user: session?.user,
+          timestamp: new Date().toISOString()
+        });
         toast.success('Successfully signed in!');
         router.push('/');
         router.refresh();
@@ -45,7 +60,10 @@ export default function LoginPage() {
         console.log('User signed out');
       }
       if (event === 'INITIAL_SESSION') {
-        console.log('Initial session:', session);
+        console.log('Initial session:', {
+          session: session,
+          timestamp: new Date().toISOString()
+        });
       }
     });
 
@@ -84,9 +102,10 @@ export default function LoginPage() {
               message: error.message,
               status: error.status,
               name: error.name,
-              stack: error.stack
+              stack: error.stack,
+              timestamp: new Date().toISOString()
             });
-            toast.error(error.message);
+            toast.error(error.message || 'An error occurred during authentication');
           }}
           localization={{
             variables: {
