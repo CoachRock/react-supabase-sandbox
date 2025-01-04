@@ -6,7 +6,7 @@ import { LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/components/auth/auth-provider";
 
 interface UserProfileProps {
   onNavigate?: () => void;
