@@ -1,2 +1,2 @@
 import { Applicants } from './page';
-export default Applicants;
+export { Applicants };

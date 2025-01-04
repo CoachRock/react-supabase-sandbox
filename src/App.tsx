@@ -52,18 +52,19 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout />
             </ProtectedRoute>
-          }>
-            <Route path="/" element={<Home />} />
-            <Route path="/create-job" element={<CreateJob />} />
-            <Route path="/active-jobs" element={<ActiveJobs />} />
-            <Route path="/archived-jobs" element={<ArchivedJobs />} />
-            <Route path="/individual-evaluation" element={<IndividualEvaluation />} />
-            <Route path="/final-report" element={<FinalReport />} />
-            <Route path="/manage-jobs" element={<ManageJobs />} />
-            <Route path="/support" element={<Support />} />
-            <Route path="/user-profile" element={<UserProfile />} />
-            <Route path="/create-interview" element={<CreateInterview />} />
-            <Route path="/applicants" element={<Applicants />} />
+          }
+        >
+          <Route path="/" element={<Home />} />
+          <Route path="/create-job" element={<CreateJob />} />
+          <Route path="/active-jobs" element={<ActiveJobs />} />
+          <Route path="/archived-jobs" element={<ArchivedJobs />} />
+          <Route path="/individual-evaluation" element={<IndividualEvaluation />} />
+          <Route path="/final-report" element={<FinalReport />} />
+          <Route path="/manage-jobs" element={<ManageJobs />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/user-profile" element={<UserProfile />} />
+          <Route path="/create-interview" element={<CreateInterview />} />
+          <Route path="/applicants" element={<Applicants />} />
         </Route>
       </Routes>
     </BrowserRouter>
