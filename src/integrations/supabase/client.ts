@@ -9,5 +9,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     storageKey: 'alpha-interview-auth',
     storage: typeof window !== 'undefined' ? window.localStorage : undefined,
     autoRefreshToken: true,
+    detectSessionInUrl: true,
   },
 });
