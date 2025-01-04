@@ -12,6 +12,7 @@ import UserProfile from './routes/user-profile';
 import CreateInterview from './routes/create-interview';
 import CreateJob from './routes/create-job';
 import { Applicants } from './routes/applicants';
+import LoginPage from './routes/auth/login';
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -31,9 +32,7 @@ function App() {
       <Routes>
         <Route
           path="/login"
-          element={
-            <div>Login Page</div>
-          }
+          element={<LoginPage />}
         />
         <Route
           path="/reset-password"
