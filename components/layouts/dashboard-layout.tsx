@@ -19,7 +19,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const { loading } = useAuth();
+  const { loading, user } = useAuth();
   const pathname = usePathname();
   const isAuthPage = ['/login', '/reset-password', '/update-password'].includes(pathname);
 
@@ -40,7 +40,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   }
 
   // Show loading state
-  if (loading && !isAuthPage) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -48,8 +48,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Don't show navigation for auth pages
-  if (isAuthPage) {
+  // Don't show navigation for auth pages or when user is not authenticated
+  if (isAuthPage || !user) {
     return <main className="min-h-screen bg-background">{children}</main>;
   }
 
